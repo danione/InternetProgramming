@@ -13,3 +13,8 @@
  5.2 If he does not, then the other player gets the same first letter
 
 6. Players take turns like this until one of them reaches 100 points
+
+# Addiotional steps
+
+1. Register
+2. Leaderboard
