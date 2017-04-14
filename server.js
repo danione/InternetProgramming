@@ -1,7 +1,7 @@
 const http = require('http');
 
-const hostname = '82.119.67.40';
-const port = 80;
+const hostname = '127.0.0.1';
+const port = 3000;
 
 var fs = require('fs');
 
