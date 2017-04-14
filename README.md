@@ -18,3 +18,8 @@
 
 1. Register
 2. Leaderboard
+
+# Tasks done
+1. NodeJS server
+2. Now knowing how to add html files 
+3. Now searching for the best template
