@@ -1,23 +1,18 @@
-const http = require('http');
-
-const hostname = '127.0.0.1';
-const port = 3000;
-
+var express = require('express');
 var fs = require('fs');
+var app = express();
 
+app.use('/static', express.static('static_pages'));
 
-fs.readFile('./index.html', function (err, html) {
-    if (err) {
-        throw err;
-    }
-    const server = http.createServer(function(request, response) {
-        response.writeHeader(200, {"Content-Type": "text/html"});
-        response.write(html);
-        response.end();
-    });
+app.get('/', function(req, res)
+{
+  res.sendFile(__dirname + '/html_pages/index.html');
+});
 
-    server.listen(port, hostname, () => {
-      console.log(`Server running at http://${hostname}:${port}/`);
-    });
+var server = app.listen(8081, function () {
 
+  var host = server.address().address
+  var port = server.address().port
+
+  console.log("Example app listening at http://%s:%s", host, port)
 });
