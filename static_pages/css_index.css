@@ -89,6 +89,10 @@ button {
     cursor: pointer;
 }
 
+.clearfix{
+  text-align: center;
+}
+
 /* Clear floats */
 .clearfix::after {
     content: "";
@@ -101,6 +105,10 @@ button {
     .cancelbtn, .signupbtn {
         width: 100%;
     }
+}
+
+#sign_up_link{
+  color:blue;
 }
 
 #main_button {
