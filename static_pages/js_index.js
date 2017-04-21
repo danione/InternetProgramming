@@ -8,4 +8,8 @@ window.onclick = function(event) {
     }
 }
 
-$.validate();
+$.validate(
+  {
+    modules : 'security'    
+  }
+);
