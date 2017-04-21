@@ -15,6 +15,32 @@ app.get('/', function(req, res)
 });
 
 
+app.post('/username_validate', urlencodedParser, function(req,res)
+{
+  var username = req.body.username;
+  var response = {'valid': false, 'message': 'Shit'};
+  var findUser = function(db, callback) {
+   var cursor = db.collection('users').find( { "username": String(username) } );
+   console.log(cursor.length);
+   cursor.each(function(err, doc) {
+      assert.equal(err, null);
+      if (doc != null) {
+        //  console.dir(doc);
+      } else {
+         callback();
+      }
+   });
+  };
+  MongoClient.connect(url, function(err, db) {
+    assert.equal(null, err);
+
+    findUser(db, function() {
+        db.close();
+      });
+  });
+  res.end(JSON.stringify(response));
+});
+
 app.post('/add_user', urlencodedParser, function(req,res)
 {
   var hashed_password = bcrypt.hashSync(req.body.psw);
@@ -40,7 +66,6 @@ app.post('/add_user', urlencodedParser, function(req,res)
         db.close();
     });
   });
-  console.log(user);
   res.end(JSON.stringify(user));
 });
 

@@ -30,10 +30,10 @@
     <form class="modal-content animate" action = "http://127.0.0.1:8089/add_user" method = "POST">
       <div class="container">
         <label><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" data-validation="alphanumeric" data-validation-allowing="-_" required>
+        <input type="text" placeholder="Enter Username" name="username" data-validation="alphanumeric server" data-validation-allowing="-_"  data-validation-url="http://127.0.0.1:8089/username_validate" required>
 
         <label><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" data-validation="email" required>
+        <input type="text" placeholder="Enter Email" name="email" data-validation="email server" data-validation-url="http://127.0.0.1:8089/email_validate" required>
 
         <label><b>Password (at least 8 characters)</b></label>
         <input type="password" placeholder="Enter Password" name="psw_confirmation" data-validation="length" data-validation-length="min8" required>

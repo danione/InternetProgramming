@@ -10,6 +10,6 @@ window.onclick = function(event) {
 
 $.validate(
   {
-    modules : 'security'    
+    modules : 'security'
   }
 );
