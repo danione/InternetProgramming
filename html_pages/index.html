@@ -21,7 +21,7 @@
     <h1 class="w3-jumbo w3-animate-top">COMING SOON</h1>
     <hr class="w3-border-grey" style="margin:auto;width:40%">
     <p class="w3-large w3-center">35 days left</p>
-    <button id="main_button" onclick="document.getElementById('sign_in_form').style.display='block'">Log in</button>
+    <button id="main_button" onclick="document.getElementById('sign_in_form').style.display='block'">Sign up</button>
     <button id="main_button"> Play as Guest</button>
   </div>
 
@@ -32,19 +32,19 @@
         <label><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="username" data-validation="alphanumeric server" data-validation-allowing="-_"  data-validation-url="http://127.0.0.1:8089/username_validate" required>
 
-        <!--<label><b>Email</b></label>
+        <label><b>Email</b></label>
         <input type="text" placeholder="Enter Email" name="email" data-validation="email server" data-validation-url="http://127.0.0.1:8089/email_validate" required>
-      -->
+
         <label><b>Password (at least 8 characters)</b></label>
         <input type="password" placeholder="Enter Password" name="psw_confirmation" data-validation="length" data-validation-length="min8" required>
 
-        <!--<label><b>Repeat Password</b></label>
+        <label><b>Repeat Password</b></label>
         <input type="password" placeholder="Repeat Password" name="psw" data-validation="confirmation" required>
-      -->
+
         <div class="clearfix">
           <button type="button" onclick="document.getElementById('sign_in_form').style.display='none'" class="cancelbtn">Cancel</button>
-          <button type="submit" class="signupbtn">Log in</button>
-          <a id="sign_up_link" href="">Don't have an account? Sign up here!</a>
+          <button type="submit" class="signupbtn">Sign up</button>
+          <a id="sign_up_link" href="">Already have an account? Sign in here!</a>
         </div>
 
       </div>
