@@ -1,6 +1,8 @@
 var express = require('express');
 var fs = require('fs');
 var app = express();
+var bodyParser = require('body-parser');
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 
 app.use('/static', express.static('static_pages'));
@@ -8,6 +10,18 @@ app.use('/static', express.static('static_pages'));
 app.get('/', function(req, res)
 {
   res.sendFile(__dirname + '/html_pages/index.html');
+});
+
+app.post('/add_user', urlencodedParser, function(req,res)
+{
+  response =
+  {
+    username:req.body.username,
+    email: req.body.email,
+    password: req.body.psw
+  };
+  console.log(response);
+  res.end(JSON.stringify(response));
 });
 
 var server = app.listen(8089, function () {
@@ -18,31 +32,6 @@ var server = app.listen(8089, function () {
   console.log("Example app listening at http://%s:%s", host, port)
 });
 
-var insertDocuments = function(db, callback) {
-  // Get the documents collection
-  var collection = db.collection('documents');
-  // Insert some documents
-  collection.insertMany([
-    {a : 1}, {a : 2}, {a : 3}
-  ], function(err, result) {
-    assert.equal(err, null);
-    assert.equal(3, result.result.n);
-    assert.equal(3, result.ops.length);
-    console.log("Inserted 3 documents into the collection");
-    callback(result);
-  });
-}
-var findDocuments = function(db, callback) {
-  // Get the documents collection
-  var collection = db.collection('documents');
-  // Find some documents
-  collection.find({}).toArray(function(err, docs) {
-    assert.equal(err, null);
-    console.log("Found the following records");
-    console.log(docs)
-    callback(docs);
-  });
-}
 
 var MongoClient = require('mongodb').MongoClient
   , assert = require('assert');
@@ -54,11 +43,5 @@ var url = 'mongodb://localhost:27017/InternetProgramming';
 MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   console.log("Connected successfully to server");
-
-  findDocuments(db, function(){
-    insertDocuments(db, function() {
-      db.close();
-    });
-  });
 
 });
