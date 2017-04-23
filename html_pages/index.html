@@ -21,12 +21,12 @@
     <h1 class="w3-jumbo w3-animate-top">COMING SOON</h1>
     <hr class="w3-border-grey" style="margin:auto;width:40%">
     <p class="w3-large w3-center">35 days left</p>
-    <button id="main_button" onclick="document.getElementById('sign_in_form').style.display='block'">Sign up</button>
+    <button id="main_button" onclick="document.getElementById('sign_up_form').style.display='block'">Sign up</button>
     <button id="main_button"> Play as Guest</button>
   </div>
 
-  <div id="sign_in_form" class="modal">
-    <span onclick="document.getElementById('sign_in_form').style.display='none'" class="close" title="Close Modal">&times;</span>
+  <div id="sign_up_form" class="modal">
+    <span onclick="document.getElementById('sign_up_form').style.display='none'" class="close" title="Close Modal">&times;</span>
     <form class="modal-content animate" action = "http://127.0.0.1:8089/add_user" method = "POST">
       <div class="container">
         <label><b>Username</b></label>
@@ -42,9 +42,9 @@
         <input type="password" placeholder="Repeat Password" name="psw" data-validation="confirmation" required>
 
         <div class="clearfix">
-          <button type="button" onclick="document.getElementById('sign_in_form').style.display='none'" class="cancelbtn">Cancel</button>
+          <button type="button" onclick="document.getElementById('sign_up_form').style.display='none'" class="cancelbtn">Cancel</button>
           <button type="submit" class="signupbtn">Sign up</button>
-          <a id="sign_up_link" href="">Already have an account? Sign in here!</a>
+          <a id="sign_in_link" href="#">Already have an account? Sign in here!</a>
         </div>
 
       </div>
