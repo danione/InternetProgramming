@@ -27,3 +27,16 @@ $.validate(
     modules : 'security'
   }
 );
+
+$(function() {
+    $('#sign_in').submit(function(event) {
+        event.preventDefault(); // Stops browser from navigating away from page
+        var data = $( this ).serializeArray();
+        $.post('/login', data, function(resp) {
+            if(resp != "Success")
+            {
+              alert('Unsuccessful');
+            }
+        });
+    });
+});

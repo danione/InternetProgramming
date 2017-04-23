@@ -36,7 +36,7 @@
         <input type="text" placeholder="Enter Email" name="email" data-validation="email server" data-validation-url="http://127.0.0.1:8089/email_validate" required>
 
         <label><b>Password (at least 8 characters)</b></label>
-        <input type="password" placeholder="Enter Password" name="psw_confirmation" data-validation="length" data-validation-length="min8" required>
+        <input type="password" placeholder="Enter Password" name="psw_confirmation" data-validation="length" data-validation-length="8-20" required>
 
         <label><b>Repeat Password</b></label>
         <input type="password" placeholder="Repeat Password" name="psw" data-validation="confirmation" required>
@@ -54,13 +54,13 @@
 
   <div id="sign_in_form" class="w3-modal">
     <span onclick="document.getElementById('sign_in_form').style.display='none'" class="close" title="Close Modal">&times;</span>
-    <form class="w3-modal-content w3-animate-top" action = "http://127.0.0.1:8089/add_user" method = "POST">
+    <form class="w3-modal-content w3-animate-top" action = "http://127.0.0.1:8089/login" method = "POST" id="sign_in">
       <div class="container">
         <label><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" data-validation="alphanumeric server" data-validation-allowing="-_"  data-validation-url="http://127.0.0.1:8089/username_validate" required>
+        <input type="text" placeholder="Enter Username" name="username_login" data-validation="alphanumeric" data-validation-allowing="-_" required>
 
         <label><b>Password (at least 8 characters)</b></label>
-        <input type="password" placeholder="Enter Password" name="psw_confirmation" data-validation="length" data-validation-length="min8" required>
+        <input type="password" placeholder="Enter Password" name="psw_login" data-validation="length alphanumeric" data-validation-length="8-20" required>
 
         <div class="clearfix">
           <button type="button" onclick="document.getElementById('sign_in_form').style.display='none'" class="cancelbtn">Cancel</button>

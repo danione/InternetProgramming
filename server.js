@@ -117,6 +117,40 @@ app.get('/logout', function(req,res)
 });
 
 
+app.post('/login',function(req, res) {
+  var user = {"username": req.body.username_login, "password": req.body.psw_login};
+  var findUser = function(db, callback) {
+  var cursor = db.collection('users').find( { "username": String(user.username) });
+  var tester = cursor.count(function(err, count){
+    assert.equal(null, err);
+    if(count == 0)
+    {
+      res.end("Error");
+      return false;
+    }
+
+    cursor.each(function(err,obj) {
+      var result = bcrypt.compareSync(user.password,obj.password);
+
+      if(result == false)
+        res.end("Fuck");
+      else
+      res.end("Success");
+      return false;
+      });
+    });
+  };
+  MongoClient.connect(url, function(err, db) {
+    assert.equal(null, err);
+
+    findUser(db, function() {
+        db.close();
+      });
+  });
+
+});
+
+
 var server = app.listen(8089, function () {
 
   var host = server.address().address
