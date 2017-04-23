@@ -25,9 +25,9 @@
     <button id="main_button"> Play as Guest</button>
   </div>
 
-  <div id="sign_up_form" class="modal">
+  <div id="sign_up_form" class="w3-modal">
     <span onclick="document.getElementById('sign_up_form').style.display='none'" class="close" title="Close Modal">&times;</span>
-    <form class="modal-content animate" action = "http://127.0.0.1:8089/add_user" method = "POST">
+    <form class="w3-modal-content w3-animate-zoom" action = "http://127.0.0.1:8089/add_user" method = "POST">
       <div class="container">
         <label><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="username" data-validation="alphanumeric server" data-validation-allowing="-_"  data-validation-url="http://127.0.0.1:8089/username_validate" required>
@@ -45,6 +45,26 @@
           <button type="button" onclick="document.getElementById('sign_up_form').style.display='none'" class="cancelbtn">Cancel</button>
           <button type="submit" class="signupbtn">Sign up</button>
           <a id="sign_in_link" href="#">Already have an account? Sign in here!</a>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+
+  <div id="sign_in_form" class="w3-modal">
+    <span onclick="document.getElementById('sign_in_form').style.display='none'" class="close" title="Close Modal">&times;</span>
+    <form class="w3-modal-content w3-animate-top" action = "http://127.0.0.1:8089/add_user" method = "POST">
+      <div class="container">
+        <label><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" data-validation="alphanumeric server" data-validation-allowing="-_"  data-validation-url="http://127.0.0.1:8089/username_validate" required>
+
+        <label><b>Password (at least 8 characters)</b></label>
+        <input type="password" placeholder="Enter Password" name="psw_confirmation" data-validation="length" data-validation-length="min8" required>
+
+        <div class="clearfix">
+          <button type="button" onclick="document.getElementById('sign_in_form').style.display='none'" class="cancelbtn">Cancel</button>
+          <button type="submit" class="signupbtn">Sign in</button>
         </div>
 
       </div>
