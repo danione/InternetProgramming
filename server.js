@@ -6,8 +6,22 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var bcrypt = require('bcrypt-nodejs');
 var url = 'mongodb://localhost:27017/InternetProgramming';
 var MongoClient = require('mongodb').MongoClient, assert = require('assert');
+var passport = require('passport');
+var morgan = require('morgan');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var flash = require('connect-flash');
+
 
 app.use('/static', express.static('static_pages'));
+app.use(morgan('dev'));
+app.use(bodyParser());
+app.use(cookieParser());
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
 
 app.get('/', function(req, res)
 {
@@ -83,7 +97,10 @@ app.post('/add_user', urlencodedParser, function(req,res)
         db.close();
     });
   });
-  res.end(JSON.stringify(user));
+  response.writeHead(200,
+    {Location: 'http://localhost:8089/'}
+  );
+  res.end();
 });
 
 var server = app.listen(8089, function () {
