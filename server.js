@@ -10,18 +10,15 @@ var passport = require('passport');
 var morgan = require('morgan');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
-var flash = require('connect-flash');
 
-
-app.use('/static', express.static('static_pages'));
 app.use(morgan('dev'));
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
 
+app.use('/static', express.static('static_pages'));
 
 app.get('/', function(req, res)
 {
@@ -87,21 +84,38 @@ app.post('/add_user', urlencodedParser, function(req,res)
     {
       assert.equal(err, null);
       console.log("Inserted a user into db");
+      res.redirect('/');
+      res.end();
       callback();
     });
   };
   MongoClient.connect(url, function(err, db) {
-    console.log("Connected successfully to server");
     assert.equal(null, err);
+    console.log("Connected successfully to server");
     add_user(db, function() {
         db.close();
     });
   });
-  response.writeHead(200,
-    {Location: 'http://localhost:8089/'}
-  );
-  res.end();
 });
+
+function isLoggedIn(req,res,next)
+{
+  if(req.isAuthenticated())
+    return next();
+
+  res.redirect('/');
+}
+
+app.get('/homepage', isLoggedIn, function(req, res) {
+  res.sendFile(__dirname + '/html_pages/homepage.html', {user: req.user});
+});
+
+app.get('/logout', function(req,res)
+{
+  req.logout();
+  res.redirect('/');
+});
+
 
 var server = app.listen(8089, function () {
 
