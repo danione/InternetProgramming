@@ -110,7 +110,6 @@ function isLoggedIn(req,res,next)
 
 
 app.get('/homepage', isLoggedIn, function(req, res) {
-  console.log(req.session.username);
   res.sendFile(__dirname + '/html_pages/homepage.html', {user: req.session.username});
 });
 
