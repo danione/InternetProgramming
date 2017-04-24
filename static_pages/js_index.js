@@ -42,6 +42,7 @@ $(function() {
             {
                 if($('#error-message').length >= 1)
                   $('#error-message').remove();
+                window.location.replace("http://127.0.0.1:8089/homepage");
             }
         });
     });

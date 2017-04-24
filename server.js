@@ -14,7 +14,7 @@ var cookieParser = require('cookie-parser');
 app.use(morgan('dev'));
 app.use(bodyParser());
 app.use(cookieParser());
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(session({ secret: 'a4f8071f-c873-4447-8ee2' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
@@ -22,6 +22,8 @@ app.use('/static', express.static('static_pages'));
 
 app.get('/', function(req, res)
 {
+  if(req.session.user_id)
+    res.redirect('/homepage');
   res.sendFile(__dirname + '/html_pages/index.html');
 });
 
@@ -69,7 +71,7 @@ app.post('/email_validate', urlencodedParser, function(req,res)
   });
 });
 
-app.post('/add_user', urlencodedParser, function(req,res)
+app.put('/add_user', urlencodedParser, function(req,res)
 {
   var hashed_password = bcrypt.hashSync(req.body.psw);
   var user =
@@ -100,11 +102,12 @@ app.post('/add_user', urlencodedParser, function(req,res)
 
 function isLoggedIn(req,res,next)
 {
-  if(req.isAuthenticated())
+  if(!req.session.user_id)
+    res.redirect('/');
+  else
     return next();
-
-  res.redirect('/');
 }
+
 
 app.get('/homepage', isLoggedIn, function(req, res) {
   res.sendFile(__dirname + '/html_pages/homepage.html', {user: req.user});
@@ -112,7 +115,7 @@ app.get('/homepage', isLoggedIn, function(req, res) {
 
 app.get('/logout', function(req,res)
 {
-  req.logout();
+  delete req.session.user_id;
   res.redirect('/');
 });
 
@@ -135,7 +138,10 @@ app.post('/login',function(req, res) {
       if(result == false)
         res.end("Error");
       else
-        res.end("Success");
+      {
+        req.session.user_id = obj._id;
+        res.end('Success');
+      }
       return false;
       });
     });
