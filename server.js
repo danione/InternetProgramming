@@ -110,12 +110,14 @@ function isLoggedIn(req,res,next)
 
 
 app.get('/homepage', isLoggedIn, function(req, res) {
-  res.sendFile(__dirname + '/html_pages/homepage.html', {user: req.user});
+  console.log(req.session.username);
+  res.sendFile(__dirname + '/html_pages/homepage.html', {user: req.session.username});
 });
 
 app.get('/logout', function(req,res)
 {
   delete req.session.user_id;
+  delete req.session.username;
   res.redirect('/');
 });
 
@@ -140,6 +142,7 @@ app.post('/login',function(req, res) {
       else
       {
         req.session.user_id = obj._id;
+        req.session.username = user.username;
         res.end('Success');
       }
       return false;
