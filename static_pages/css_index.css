@@ -11,6 +11,16 @@ body, html {height: 100%}
   text-align: center;
 }
 
+#error-message
+{
+  color:red;
+  display: block;
+  position: relative;
+  text-align: center;
+  margin: 0 auto;
+  padding-bottom: 1em;
+}
+
 /* Full-width input fields */
 input[type=text], input[type=password] {
     width: 100%;

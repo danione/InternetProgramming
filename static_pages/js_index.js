@@ -35,7 +35,13 @@ $(function() {
         $.post('/login', data, function(resp) {
             if(resp != "Success")
             {
-              alert('Unsuccessful');
+              if($('#error-message').length < 1)
+                $('#sign_in').append('<span id=\"error-message\">No such username or password.<br>Please check again</span>');
+            }
+            else
+            {
+                if($('#error-message').length >= 1)
+                  $('#error-message').remove();
             }
         });
     });

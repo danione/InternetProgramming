@@ -133,9 +133,9 @@ app.post('/login',function(req, res) {
       var result = bcrypt.compareSync(user.password,obj.password);
 
       if(result == false)
-        res.end("Fuck");
+        res.end("Error");
       else
-      res.end("Success");
+        res.end("Success");
       return false;
       });
     });
