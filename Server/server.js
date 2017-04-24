@@ -17,6 +17,8 @@ app.use(cookieParser());
 app.use(session({ secret: 'a4f8071f-c873-4447-8ee2' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
+app.set('view engine', 'ejs');
+
 
 app.use('/static', express.static('static_pages'));
 
@@ -24,7 +26,7 @@ app.get('/', function(req, res)
 {
   if(req.session.user_id)
     res.redirect('/homepage');
-  res.sendFile(__dirname + '/html_pages/index.html');
+  res.render('index.ejs');
 });
 
 
@@ -110,7 +112,7 @@ function isLoggedIn(req,res,next)
 
 
 app.get('/homepage', isLoggedIn, function(req, res) {
-  res.sendFile(__dirname + '/html_pages/homepage.html', {user: req.session.username});
+  res.render('homepage.ejs', {user: req.session.username});
 });
 
 app.get('/logout', function(req,res)
