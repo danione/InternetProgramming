@@ -73,7 +73,7 @@ app.post('/email_validate', urlencodedParser, function(req,res)
   });
 });
 
-app.put('/add_user', urlencodedParser, function(req,res)
+app.post('/add_user', urlencodedParser, function(req,res)
 {
   var hashed_password = bcrypt.hashSync(req.body.psw);
   var user =
@@ -142,6 +142,7 @@ app.post('/login',function(req, res) {
         res.end("Error");
       else
       {
+        console.log(obj.email);
         req.session.user_id = obj._id;
         req.session.username = user.username;
         res.end('Success');
