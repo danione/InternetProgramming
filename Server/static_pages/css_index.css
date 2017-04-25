@@ -1,14 +1,21 @@
 body,h1 {font-family: "Raleway", sans-serif}
 body, html {height: 100%}
 .bgimg {
-    background-image: url('http://brandilynnryder.com/images/library-vintage-typewriter.jpg');
+    background-image: url('http://afropolitain-magazine.com/wp-content/uploads/2017/01/afropolitain-magazine-the-afro-of-today-for-tomorrow-le-poid-des-mots.jpg');
     min-height: 100%;
     background-position: center;
     background-size: cover;
 }
 
+#logo {
+  width:25%;
+  height: auto;
+}
+
 #center_holder {
   text-align: center;
+  color: white;
+  text-shadow: 3px 3px #3d36f9;
 }
 
 #error-message
