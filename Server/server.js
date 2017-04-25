@@ -142,7 +142,6 @@ app.post('/login',function(req, res) {
         res.end("Error");
       else
       {
-        console.log(obj.email);
         req.session.user_id = obj._id;
         req.session.username = user.username;
         res.end('Success');
