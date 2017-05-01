@@ -1,4 +1,5 @@
 var express = require('express');
+    http = require('http');
 var fs = require('fs');
 var app = express();
 var bodyParser = require('body-parser');
@@ -11,6 +12,7 @@ var morgan = require('morgan');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 
+
 app.use(morgan('dev'));
 app.use(bodyParser());
 app.use(cookieParser());
@@ -21,6 +23,7 @@ app.set('view engine', 'ejs');
 
 
 app.use('/static', express.static('static_pages'));
+app.use('/node_modules', express.static('./node_modules'));
 
 app.get('/', function(req, res)
 {
@@ -161,10 +164,24 @@ app.post('/login',function(req, res) {
 });
 
 
+
 var server = app.listen(8089, function () {
 
   var host = server.address().address
   var port = server.address().port
 
   console.log("Example app listening at http://%s:%s", host, port)
+});
+
+var io = require('socket.io').listen(server);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
+io.on('connection', function(socket){
+  socket.on('button click', function(msg){
+    console.log('message: ' + msg);
+    io.emit('button click', msg);
+  });
 });

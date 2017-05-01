@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
+<script>
+  var socket = io();
+</script>
+
+</head>
 <title>Homepage</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,7 +51,7 @@ body, html {height: 100%}
   <div class="w3-display-middle">
     <h1 class="w3-jumbo w3-animate-zoom">Ready to start?</h1>
     <hr class="w3-border-grey" style="margin:auto;width:40%;bottom:50px">
-    <button id="button" class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge" type="button" name="start_button">Press to play!</button>
+    <button id="button" class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge" type="button">Press to play!</button>
   </div>
 
   <div class="w3-display-bottomright">
@@ -53,6 +60,19 @@ body, html {height: 100%}
   </div>
 
 </div>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+$(function () {
+   var socket = io();
+   $('#button').click(function(){
 
+     socket.emit('button click', "button clicked");
+     return false;
+   });
+   socket.on('button click', function(msg){
+      alert(msg);
+    });
+ });
+</script>
 </body>
 </html>
