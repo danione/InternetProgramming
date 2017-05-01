@@ -49,9 +49,14 @@ body, html {height: 100%}
   </div>
 
   <div class="w3-display-middle">
-    <h1 class="w3-jumbo w3-animate-zoom">Ready to start?</h1>
-    <hr class="w3-border-grey" style="margin:auto;width:40%;bottom:50px">
+    <h1 id="ready_text" class="w3-jumbo w3-animate-zoom">Ready to start?</h1>
+    <hr id="border" class="w3-border-grey" style="margin:auto;width:40%;bottom:50px">
     <button id="button" class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge" type="button">Press to play!</button>
+    <p id="page_console">Looking for opponent</p>
+    <form class="word_input w3-container" action="#" method="post">
+      Your word: <input type="text" name="fname"><br>
+      <input class="w3-input" type="submit" value="Submit">
+    </form>
   </div>
 
   <div class="w3-display-bottomright">
@@ -63,15 +68,26 @@ body, html {height: 100%}
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
 $(function () {
+  var used_words = new Array();
+  var rival;
    var socket = io();
+   $('#page_console').hide();
+   $('.word_input').hide();
+
    $('#button').click(function(){
+     $('#ready_text').hide();
+     $('#border').hide();
+     $('#button').hide();
+     $('#page_console').show();
+     $('.word_input').show();
 
      socket.emit('button click', "button clicked");
      return false;
    });
-   socket.on('button click', function(msg){
-      alert(msg);
+   socket.on('found rival', function(socket){
+      rival = socket;
     });
+    
  });
 </script>
 </body>

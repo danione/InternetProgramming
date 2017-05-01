@@ -12,6 +12,9 @@ var morgan = require('morgan');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 
+var queue = new Array();
+
+
 
 app.use(morgan('dev'));
 app.use(bodyParser());
@@ -181,7 +184,13 @@ io.on('connection', function(socket){
 
 io.on('connection', function(socket){
   socket.on('button click', function(msg){
-    console.log('message: ' + msg);
-    io.emit('button click', msg);
+    var rival;
+    if(queue.length < 1){
+      queue.push(socket);
+    } else {
+      var rival = queue.pop();
+      socket.broadcast.to(rival).emit("found rival", socket);
+      socket.broadcast.to(socket).emit("found rival", rival);
+    }
   });
 });
