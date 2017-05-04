@@ -167,6 +167,13 @@ app.post('/login',function(req, res) {
 });
 
 
+app.get('/random_letter', function(req, res)
+{
+  var possible_letters = 'abcdefghijklmnopqrstuvwxyz';
+  res.end(possible_letters.charAt(Math.floor(Math.random() * possible_letters.length)))
+})
+
+
 
 var server = app.listen(8089, function () {
 
