@@ -202,25 +202,28 @@ io.on('connection', function(socket){
   socket.on('button click', function()
   {
     socket.in_queue = false;
-    if(rooms.length < 1)
+    if(Object.keys(rooms).length < 1)
     {
-      
+      socket.join(socket.id);
+      rooms[socket.id] = 1;
     }
     else
     {
         var connected = false;
         for (key in rooms)
         {
-          if(room[key] == 1)
+          if(rooms[key] == 1)
           {
             connected = true;
             socket.join(key);
+            rooms[key] = 2;
             break;
           }
         }
         if(connected == false)
         {
-
+          socket.join(socket.id);
+          rooms[socket.id] = 1;
         }
     }
   })
