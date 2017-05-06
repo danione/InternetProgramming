@@ -43,7 +43,11 @@ $(function() {
                 if($('#error-message').length >= 1)
                   $('#error-message').remove();
                 //var socket = io();
-                window.location.replace("http://127.0.0.1:8089/homepage");
+                var current_location = window.location.href;
+                current_location = current_location.slice(0,current_location.indexOf("#"));
+                //window.alert(current_location);
+                current_location = current_location + "homepage";
+                window.location.replace(current_location);
             }
         });
     });

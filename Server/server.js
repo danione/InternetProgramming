@@ -11,7 +11,11 @@ var passport = require('passport');
 var morgan = require('morgan');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
+var uuid = require('uuid');
 
+
+var guest_id = 1;
+var myuuid = '0123456789abcdeffedcba9876543210'
 
 app.use(morgan('dev'));
 app.use(bodyParser());
@@ -114,9 +118,50 @@ function isLoggedIn(req,res,next)
 }
 
 
-app.get('/guest_session', isLoggedIn, function(req,res)
+app.get('/guest_session', function(req,res)
 {
-  console.log();
+  var random_guest = "guest: " + uuid.v1();
+  var user =
+  {
+    username:random_guest,
+  };
+  var add_user = function(db, callback)
+  {
+    db.collection('users').insertOne(user)
+  };
+
+
+  var findUser = function(db, callback) {
+  var cursor = db.collection('users').find( { "username": random_guest });
+  var tester = cursor.count(function(err, count){
+    assert.equal(null, err);
+    if(count == 0)
+    {
+      res.end("Error");
+      return false;
+    }
+
+    cursor.each(function(err,obj) {
+
+        req.session.user_id = obj._id;
+        req.session.username = user.username;
+        res.end('Success');
+
+      return false;
+      });
+    });
+  };
+  MongoClient.connect(url, function(err, db) {
+    assert.equal(null, err);
+    add_user(db, function() {
+        db.close();
+    });
+
+    findUser(db, function() {
+        db.close();
+      });
+  });
+  console.log(random_guest);
 })
 
 
@@ -227,6 +272,12 @@ io.on('connection', function(socket){
         }
     }
   })
+
+  /*socket.on('ping_opponent', function(socket){
+    var currentRoom = socket.rooms[Object.keys(socket.rooms)[0]];
+    console.log(rooms[0]);
+    io.to(currentRoom).emit('pinged',"");
+  })*/
 
   socket.on('disconnect', function()
   {
