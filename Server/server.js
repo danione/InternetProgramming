@@ -197,7 +197,6 @@ io.on('connection', function(socket){
     console.log(socket.username + " connected");
     queue[socket.username] = socket;
     socket.in_queue = true;
-    console.log(queue);
   })
 
   socket.on('button click', function()
@@ -209,18 +208,14 @@ io.on('connection', function(socket){
   socket.on('disconnect', function()
   {
     if(socket.in_queue)
-    {
       delete queue[socket.username];
-      console.log(queue);
-    }
 
     var func = function()
     {
-      if(socket.username)
+      if(!(socket.username in queue))
         console.log(socket.username  + ' disconnected');
-
     };
-    setTimeout(func,2000);
+    setTimeout(func,4000);
   })
 
 });
