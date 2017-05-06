@@ -22,18 +22,20 @@
     <hr class="w3-border-grey" style="margin:auto;width:40%">
     <p class="w3-large w3-center">35 days left</p>
     <button id="main_button" onclick="document.getElementById('sign_up_form').style.display='block'">Sign up</button>
-    <button id="main_button"> Play as Guest</button>
+    <form action = "/guest_session" method = "GET">
+      <button type="submit" id="main_button"> Play as Guest</button>
+    </form>
   </div>
 
   <div id="sign_up_form" class="w3-modal">
     <span onclick="document.getElementById('sign_up_form').style.display='none'" class="close" title="Close Modal">&times;</span>
-    <form class="w3-modal-content w3-animate-zoom" action = "http://127.0.0.1:8089/add_user" method = "POST">
+    <form class="w3-modal-content w3-animate-zoom" action = "/add_user" method = "POST">
       <div class="container">
         <label><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" data-validation="alphanumeric server" data-validation-allowing="-_"  data-validation-url="http://127.0.0.1:8089/username_validate" required>
+        <input type="text" placeholder="Enter Username" name="username" data-validation="alphanumeric server" data-validation-allowing="-_"  data-validation-url="/username_validate" required>
 
         <label><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" data-validation="email server" data-validation-url="http://127.0.0.1:8089/email_validate" required>
+        <input type="text" placeholder="Enter Email" name="email" data-validation="email server" data-validation-url="/email_validate" required>
 
         <label><b>Password (at least 8 characters)</b></label>
         <input type="password" placeholder="Enter Password" name="psw_confirmation" data-validation="length" data-validation-length="8-20" required>
@@ -54,7 +56,7 @@
 
   <div id="sign_in_form" class="w3-modal">
     <span onclick="document.getElementById('sign_in_form').style.display='none'" class="close" title="Close Modal">&times;</span>
-    <form class="w3-modal-content w3-animate-top" action = "http://127.0.0.1:8089/login" method = "POST" id="sign_in">
+    <form class="w3-modal-content w3-animate-top" action = "/login" method = "POST" id="sign_in">
       <div class="container">
         <label><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="username_login" data-validation="alphanumeric" data-validation-allowing="-_" required>

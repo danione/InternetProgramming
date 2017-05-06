@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Homepage</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
   <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
 <script>
   var socket = io();
+  socket.emit('person join',"<%=user%>");
 </script>
 
 </head>
-<title>Homepage</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
+
 <style>
 body,h1 {font-family: "Raleway", sans-serif}
 body, html {height: 100%}
@@ -61,16 +64,14 @@ body, html {height: 100%}
 
   <div class="w3-display-bottomright">
     <button id="button_log_out" class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge w3-hover-red"
-    type="button" name="start_button" onclick="location.href='http://127.0.0.1:8089/logout';" >Log out</button>
+    type="button" name="start_button" onclick="location.href='/logout';" >Log out</button>
   </div>
 
 </div>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
 $(function () {
-  var used_words = new Array();
-  var rival;
-   var socket = io();
+   var rival;
    $('#page_console').hide();
    $('.word_input').hide();
 
@@ -81,13 +82,13 @@ $(function () {
      $('#page_console').show();
      $('.word_input').show();
 
-     socket.emit('button click', "button clicked");
+     socket.emit('button click');
      return false;
    });
    socket.on('found rival', function(socket){
       rival = socket;
     });
-    
+
  });
 </script>
 </body>

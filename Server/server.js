@@ -12,9 +12,6 @@ var morgan = require('morgan');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 
-var queue = new Array();
-
-
 
 app.use(morgan('dev'));
 app.use(bodyParser());
@@ -117,6 +114,12 @@ function isLoggedIn(req,res,next)
 }
 
 
+app.get('/guest_session', isLoggedIn, function(req,res)
+{
+  console.log();
+})
+
+
 app.get('/homepage', isLoggedIn, function(req, res) {
   res.render('homepage.ejs', {user: req.session.username});
 });
@@ -184,20 +187,40 @@ var server = app.listen(8089, function () {
 });
 
 var io = require('socket.io').listen(server);
+var queue = {};
+
 
 io.on('connection', function(socket){
-  console.log('a user connected');
-});
+  socket.on('person join', function(user)
+  {
+    socket.username = user;
+    console.log(socket.username + " connected");
+    queue[socket.username] = socket;
+    socket.in_queue = true;
+    console.log(queue);
+  })
 
-io.on('connection', function(socket){
-  socket.on('button click', function(msg){
-    var rival;
-    if(queue.length < 1){
-      queue.push(socket);
-    } else {
-      var rival = queue.pop();
-      socket.broadcast.to(rival).emit("found rival", socket);
-      socket.broadcast.to(socket).emit("found rival", rival);
+  socket.on('button click', function()
+  {
+    socket.in_queue = false;
+    console.log('Button clicked');
+  })
+
+  socket.on('disconnect', function()
+  {
+    if(socket.in_queue)
+    {
+      delete queue[socket.username];
+      console.log(queue);
     }
-  });
+
+    var func = function()
+    {
+      if(socket.username)
+        console.log(socket.username  + ' disconnected');
+
+    };
+    setTimeout(func,2000);
+  })
+
 });
