@@ -188,7 +188,7 @@ var server = app.listen(8089, function () {
 
 var io = require('socket.io').listen(server);
 var queue = {};
-
+var rooms = {};
 
 io.on('connection', function(socket){
   socket.on('person join', function(user)
@@ -202,7 +202,27 @@ io.on('connection', function(socket){
   socket.on('button click', function()
   {
     socket.in_queue = false;
-    console.log('Button clicked');
+    if(rooms.length < 1)
+    {
+      
+    }
+    else
+    {
+        var connected = false;
+        for (key in rooms)
+        {
+          if(room[key] == 1)
+          {
+            connected = true;
+            socket.join(key);
+            break;
+          }
+        }
+        if(connected == false)
+        {
+
+        }
+    }
   })
 
   socket.on('disconnect', function()
