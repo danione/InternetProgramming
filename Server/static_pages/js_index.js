@@ -51,4 +51,15 @@ $(function() {
             }
         });
     });
+
+    $('#guest_button').click(function(event) {
+      //event.preventDefault();
+      $.get('/guest_session', function(resp) {
+            var current_location = window.location.href;
+            current_location = current_location.slice(0,current_location.indexOf("#"));
+            //window.alert(current_location);
+            current_location = current_location + "/homepage";
+            window.location.replace(current_location);
+      })
+    });
 });

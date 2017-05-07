@@ -171,6 +171,11 @@ app.get('/homepage', isLoggedIn, function(req, res) {
 
 app.get('/logout', function(req,res)
 {
+  MongoClient.connect(url, function(err, db) {
+    assert.equal(null, err);
+    db.collection('users').remove({ "username": req.session.username });
+  });
+
   delete req.session.user_id;
   delete req.session.username;
   res.redirect('/');
