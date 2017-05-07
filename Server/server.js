@@ -254,11 +254,14 @@ io.on('connection', function(socket){
     socket.in_queue = false;
     if(Object.keys(rooms).length < 1)
     {
+      console.log("no other rooms");
       socket.join(socket.id);
+      console.log("Socket joined: " + socket.id);
       rooms[socket.id] = 1;
     }
     else
     {
+        console.log("we have other rooms");
         var connected = false;
         for (key in rooms)
         {
@@ -266,6 +269,7 @@ io.on('connection', function(socket){
           {
             connected = true;
             socket.join(key);
+            console.log("Socket joined: " + key);
             rooms[key] = 2;
             break;
           }
@@ -278,12 +282,22 @@ io.on('connection', function(socket){
     }
   })
 
-  socket.on('ping_opponent', function(socket){
-    try{
-      io.sockets.to(socket).emit('pinged');
-    }catch(e){
-      console.log("YO",e)
+  socket.on('ping_opponent', function(socket_id){
+    var socketRoom = Object.keys(socket.rooms);
+    console.log(socketRoom);
+    if(Object.keys(socketRoom).length == 1){
+      console.log("length 1");
+      socket.broadcast.to(socketRoom[0]).emit('pinged');
+      console.log(socketRoom[0]);
+    } else {
+    //console.log(socket_id);
+    console.log("length 2");
+      socketRoom.filter(item => item!=socket.id);
+      if (io.sockets.connected[socketRoom[1]]) {
+        io.sockets.connected[socketRoom[1]].emit('pinged');
+      }
     }
+    //console.log(socket_id);
 
     /*console.log("socket name: " + socket);
     console.log(io.sockets.manager.roomClients[socket]);*/
