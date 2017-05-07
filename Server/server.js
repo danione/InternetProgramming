@@ -278,11 +278,17 @@ io.on('connection', function(socket){
     }
   })
 
-  /*socket.on('ping_opponent', function(socket){
-    var currentRoom = socket.rooms[Object.keys(socket.rooms)[0]];
-    console.log(rooms[0]);
-    io.to(currentRoom).emit('pinged',"");
-  })*/
+  socket.on('ping_opponent', function(socket){
+    try{
+      io.sockets.to(socket).emit('pinged');
+    }catch(e){
+      console.log("YO",e)
+    }
+
+    /*console.log("socket name: " + socket);
+    console.log(io.sockets.manager.roomClients[socket]);*/
+
+  })
 
   socket.on('disconnect', function()
   {
