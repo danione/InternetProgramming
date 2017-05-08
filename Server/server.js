@@ -340,9 +340,15 @@ function checkWord(word)
   return words.check(word);
 }
 
-function sumPoints(word, points)
+function sumPoints(letter,word, points)
 {
+  if(word.charAt(0) != letter)
+  {
+    return points = -1;
+  }
   if(checkWord(word))
     points += word.length;
+  else
+    points = -1;
   return points;
 }
