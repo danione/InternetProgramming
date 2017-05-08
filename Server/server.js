@@ -87,7 +87,8 @@ app.post('/add_user', urlencodedParser, function(req,res)
   {
     username:req.body.username,
     email: req.body.email,
-    password: hashed_password
+    password: hashed_password,
+    points: 0
   };
   var add_user = function(db, callback)
   {
@@ -166,7 +167,7 @@ app.get('/guest_session', function(req,res)
 
 
 app.get('/homepage', isLoggedIn, function(req, res) {
-  res.render('homepage.ejs', {user: req.session.username});
+  res.render('homepage.ejs', {user: req.session.username, points: req.session.user_points});
 });
 
 app.get('/logout', function(req,res)
@@ -178,6 +179,7 @@ app.get('/logout', function(req,res)
 
   delete req.session.user_id;
   delete req.session.username;
+  delete req.session.user_points;
   res.redirect('/');
 });
 
@@ -203,6 +205,7 @@ app.post('/login',function(req, res) {
       {
         req.session.user_id = obj._id;
         req.session.username = user.username;
+        req.session.user_points = obj.points;
         res.end('Success');
       }
       return false;
@@ -318,3 +321,28 @@ io.on('connection', function(socket){
   })
 
 });
+
+//timer
+function timer()
+{
+  var func = function()
+  {
+    console.log("Next player");
+  };
+  setTimeout(func,10000);
+}
+
+//dictionary
+var wordChecker = require('check-word'),
+    words     = wordChecker('en');
+function checkWord(word)
+{
+  return words.check(word);
+}
+
+function sumPoints(word, points)
+{
+  if(checkWord(word))
+    points += word.length;
+  return points;
+}
