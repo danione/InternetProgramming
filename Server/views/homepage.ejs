@@ -39,6 +39,10 @@ body, html {height: 100%}
   margin-bottom: 30px;
 }
 
+#page_console{
+  white-space: pre-wrap;
+}
+
 </style>
 <body>
 
@@ -49,18 +53,16 @@ body, html {height: 100%}
 <div class="bgimg w3-display-container w3-text-black">
   <div class="w3-display-topmiddle ">
     <h1>Hello, <%=user%></h1>
-    <h2>Current Points : <%=points%></h2>
+    <h2 id="currentPoints">Current Points : 0</h2>
   </div>
 
   <div class="w3-display-middle">
     <h1 id="ready_text" class="w3-jumbo w3-animate-zoom">Ready to start?</h1>
     <hr id="border" class="w3-border-grey" style="margin:auto;width:40%;bottom:50px">
     <button id="button" class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge" type="button">Press to play!</button>
-    <button id="check_opponent" class="w3-btn w3-white w3-border w3-border-blue w3-round-xlarge" type="button">Check your opponent!</button>
     <p id="page_console">Looking for opponent</p>
-    <form class="word_input w3-container" action="#" method="post">
-      Your word: <input type="text" name="fname"><br>
-      <input class="w3-input" type="submit" value="Submit">
+    <form class = "word_input" action="javascript:void(0);">
+      Your word: <input id="input" type="text">
     </form>
   </div>
 
@@ -74,6 +76,8 @@ body, html {height: 100%}
 <script>
 $(function () {
    var rival;
+   var first_letter;
+   var points = 0;
    $('#page_console').hide();
    $('.word_input').hide();
 
@@ -89,18 +93,84 @@ $(function () {
      return false;
    });
 
-   $('#check_opponent').click(function(){
-      socket.emit('ping_opponent', socket.id);
-   });
+   /*function checkWord(word){
+     console.log("enter checkWord");
+     var dictURL = "https://od-api.oxforddictionaries.com:443/api/v1/search/en?q=" + word.toLowerCase() + "&prefix=false";
+     $.ajax({
+        header('Access-Control-Allow-Origin: https://od-api.oxforddictionaries.com');
+        //if you need cookies or login etc
+        header('Access-Control-Allow-Credentials: true');
+        if ($this->getRequestMethod() == 'OPTIONS')
+        {
+          header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+          header('Access-Control-Max-Age: 604800');
+          //if you need special headers
+          header('Access-Control-Allow-Headers: x-requested-with');
+          exit(0);
+        }
+        url: dictURL,
+        crossDomain: true,
+        xhrFields: {
+        withCredentials: true
+        },
+        beforeSend: function(xhr){
+          xhr.setRequestHeader("Accept", "application/json");
+          xhr.setRequestHeader("app_id", "c9ce7781");
+          xhr.setRequestHeader("app_key", "e9c60eee8bdd3161f19b1a603bd7797e");
+        },
+        type: "GET"
+        }).done(function(data) {
+          console.log(data);
+          alert(data);
+        })
+   }*/
+   function turn(first_letter){
+     setTimeout(function(){$('#page_console').text('your first letter: ' + first_letter + "\n")}, 4500);
+     $('#input').select();
+     setTimeout(function(){
+       var input = $('#input').val();
+       $("#page_console").text("Time's up!\nChecking Letter...");
+       $("input").val("");
+       //socket.emit('get result', {id: socket.id, word: input,letter: first_letter, points: points});
 
-   socket.on('pinged', function(){
-     alert("Pinged by opponent");
-     console.log("Pinged by opponent");
+         socket.emit('get result', {id:socket.id, word:input, points:points, letter:first_letter});
+
+     }, 11500);
+   }
+
+   socket.on('first', function(letter){
+     $('#page_console').text('found opponent. you are first');
+     socket.emit('ping opponent', {id: socket.id, message:'you are second'});
+     setTimeout(function(){
+       $('#page_console').text("Generating first letter...\n You will have seven seconds to write a word \n that begins with that letter");
+       turn(letter);
+     }, 4500);
+
    })
 
-   socket.on('found rival', function(socket){
-      rival = socket;
-    });
+   socket.on('turn', function(letter){
+     //alert("it's my turn");
+     $('#page_console').text("Now it's your turn!\nGet set!");
+     turn(letter);
+   })
+
+   socket.on('correct word', function(result){
+     console.log("correct word");
+     console.log(result.word);
+     var lastLetter = result.word.charAt(result.word.length - 1);
+      $("#page_console").text("Correct!\n You get " + result.pointsGiven + " points!!!");
+      $("#currentPoints").text("Current Points : " + result.pointsGiven);
+      points += result.pointsGiven;
+      socket.emit('ping opponent',{id:socket.id, message:'turn', letter: lastLetter});
+      setTimeout(function(){$('#page_console').text("Opponent's Turn")}, 4000);
+
+   })
+
+   socket.on('you are second', function(){
+     $('#page_console').text('found opponent. you are second. waiting for opponent');
+     console.log("second");
+   })
+
 
  });
 </script>

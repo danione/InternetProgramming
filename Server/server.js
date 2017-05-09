@@ -2,6 +2,7 @@ var express = require('express');
     http = require('http');
 var fs = require('fs');
 var app = express();
+var cors = require('cors');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var bcrypt = require('bcrypt-nodejs');
@@ -13,9 +14,13 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var uuid = require('uuid');
 
+app.use(cors())
 
 var guest_id = 1;
 var myuuid = '0123456789abcdeffedcba9876543210'
+
+var jsdom = require('jsdom');
+var html = '<html><body></body></html>';
 
 app.use(morgan('dev'));
 app.use(bodyParser());
@@ -28,6 +33,8 @@ app.set('view engine', 'ejs');
 
 app.use('/static', express.static('static_pages'));
 app.use('/node_modules', express.static('./node_modules'));
+
+
 
 app.get('/', function(req, res)
 {
@@ -223,11 +230,11 @@ app.post('/login',function(req, res) {
 });
 
 
-app.get('/random_letter', function(req, res)
+function random_letter()
 {
   var possible_letters = 'abcdefghijklmnopqrstuvwxyz';
-  res.end(possible_letters.charAt(Math.floor(Math.random() * possible_letters.length)))
-})
+  return possible_letters.charAt(Math.floor(Math.random() * possible_letters.length));7
+}
 
 
 
@@ -242,6 +249,7 @@ var server = app.listen(8089, function () {
 var io = require('socket.io').listen(server);
 var queue = {};
 var rooms = {};
+
 
 io.on('connection', function(socket){
   socket.on('person join', function(user)
@@ -274,6 +282,11 @@ io.on('connection', function(socket){
             socket.join(key);
             console.log("Socket joined: " + key);
             rooms[key] = 2;
+            //io.sockets.in(key).emit("start game");
+            var result = random_letter();
+            io.sockets.connected[key].emit('first', result);
+
+
             break;
           }
         }
@@ -285,27 +298,76 @@ io.on('connection', function(socket){
     }
   })
 
-  socket.on('ping_opponent', function(socket_id){
+
+
+  /*function pingOpponent(socket, socket_id, msg){
     var socketRoom = Object.keys(socket.rooms);
     console.log(socketRoom);
     if(Object.keys(socketRoom).length == 1){
       console.log("length 1");
-      socket.broadcast.to(socketRoom[0]).emit('pinged');
+      socket.broadcast.to(socketRoom[0]).emit(msg);
       console.log(socketRoom[0]);
     } else {
     //console.log(socket_id);
     console.log("length 2");
       socketRoom.filter(item => item!=socket.id);
       if (io.sockets.connected[socketRoom[1]]) {
-        io.sockets.connected[socketRoom[1]].emit('pinged');
+
       }
     }
-    //console.log(socket_id);
+  }*/
 
+  socket.on('ping opponent', function(data){
+    var socket_id = data.id;
+    var msg = data.message;
+    var letter = data.letter;
+    var socketRoom = Object.keys(socket.rooms);
+    console.log(socketRoom);
+    if(Object.keys(socketRoom).length == 1){
+      if(letter == null)
+      socket.broadcast.to(socketRoom[0]).emit(msg);
+      else
+      socket.broadcast.to(socketRoom[0]).emit(msg,letter);
+      console.log(socketRoom[0]);
+    } else {
+
+      socketRoom.filter(item => item!=socket.id);
+      if (io.sockets.connected[socketRoom[1]]) {
+        if(letter == null)
+        io.sockets.connected[socketRoom[1]].emit(msg);
+        else
+        io.sockets.connected[socketRoom[1]].emit(msg,letter);
+      }
+    }
     /*console.log("socket name: " + socket);
     console.log(io.sockets.manager.roomClients[socket]);*/
 
   })
+
+
+//The url we want is `www.nodejitsu.com:1337/`
+
+//This is the data we are posting, it needs to be a string or a buffer
+
+
+
+  socket.on('get result', function(result){
+
+    console.log("got result");
+    var socket_id = result.id;
+    var word = result.word;
+    var points = result.points;
+    var letter = result.letter;
+    var checkWord = require('check-word'),
+    words     = checkWord('en');
+    console.log(words.check(word));
+    var receivePoints = sumPoints(letter, word, points);
+    if(receivePoints != -1){
+      if (io.sockets.connected[socket_id]) {
+          io.sockets.connected[socket_id].emit('correct word', {pointsGiven:receivePoints, word:word});
+      }
+    }
+  });
 
   socket.on('disconnect', function()
   {
@@ -322,33 +384,15 @@ io.on('connection', function(socket){
 
 });
 
-//timer
-function timer()
-{
-  var func = function()
-  {
-    console.log("Next player");
-  };
-  setTimeout(func,10000);
-}
 
-//dictionary
-var wordChecker = require('check-word'),
-    words     = wordChecker('en');
-function checkWord(word)
-{
-  return words.check(word);
-}
 
 function sumPoints(letter,word, points)
 {
   if(word.charAt(0) != letter)
   {
     return points = -1;
-  }
-  if(checkWord(word))
+  } else {
     points += word.length;
-  else
-    points = -1;
+  }
   return points;
 }
